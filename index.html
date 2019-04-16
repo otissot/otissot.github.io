@@ -1,64 +1,53 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
-	<!--<link href='http://fonts.googleapis.com/css?family=Roboto:300,400' rel='stylesheet' type='text/css'>-->
+  <head>
 	<title>Olivier Tissot</title>
-	<!--<meta name="google-site-verification" content="JlJ6I67eIpoh4tvmvpkDLETxruaUWBfihagzZLNMUo8" /> -->
         <meta charset="utf-8">
-	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0" >
-	<link rel="shortcut icon" href="./img/ljll-favicon.ico" > -->
 	<!-- Bootstrap -->
 	<link href="css/bootstrap.min.css" rel="stylesheet">
-
+	<!-- Prism for syntax highlighting -->
+	<link rel="stylesheet"
+	  href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css"
+	/>
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
 	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 	<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 	<![endif]-->
-    </head>
-    <body>
+  </head>
 
+  <body>
 
 	<nav class="navbar navbar-default navbar-static-top">
 	    <div class="container">
-	    <!--<div class="container-fluid">-->
-		<div class="navbar-header">
+				<div class="navbar-header">
 		    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-			<span class="sr-only">Toggle navigation</span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
+				<span class="sr-only">Toggle navigation</span>
+				<!-- <span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span> -->
 		    </button>
 		    <a class="navbar-brand">Olivier Tissot</a>
-		</div>
-		<div id="navbar" class="navbar-collapse collapse">
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
 		    <ul class="nav navbar-nav">
-                <li class="active"><a href="index.html">Home</a></li>
-            <!--    <li><a href="publications.html">Publications</a></li>
+          <li class="active"><a href="index.html">Home</a></li>
+            <!--<li><a href="publications.html">Publications</a></li>
                 <li><a href="talks.html">Talks</a></li>
                 <li><a href="teaching.html">Teaching</a></li>-->
-
-
 		    </ul>
-		    <ul class="nav navbar-nav navbar-right">
-			<!-- <li><a href="#">Contact</a></li> -->
-		    </ul>
-		</div><!--/.nav-collapse -->
-	    </div><!--/.container-fluid -->
-	    </nav>
+		    <!-- <ul class="nav navbar-nav navbar-right">
+					   <li><a href="#">Contact</a></li>
+		    </ul> -->
+			</div><!--/.nav-collapse -->
+	  </div><!--/.container -->
+	</nav>
 	    <div class="container">
-	    <div class="page-header">
 
-		<h1>Olivier Tissot</h1>
-        <!--<p class="lead"><a href="https://www.ljll.math.upmc.fr/" style="color:inherit">Laboratoire Jacques-Louis Lions
-        </a>  -
-        <a href="http://ics.sorbonne-universites.fr/" style="color:inherit">Institut du Calcul et de la Simulation
-        </a>
-        <br />
-        <a href="http://upmc.fr/" style="color:inherit">Université Pierre et Marie Curie (Paris VI)</a>
-        </p> -->
+	    <div class="page-header">
+				<h1>Olivier Tissot</h1>
 	    </div>
 
 
@@ -74,9 +63,10 @@
                 <br>
                 Before that, I was a Ph.D. student at the <a href="https://www.ljll.math.upmc.fr/" style="color:inherit">Laboratoire Jacques-Louis Lions
                 </a> (Sorbonne university) as part of the Inria team <a href="https://team.inria.fr/alpines/fr/" style="color:inherit">Alpines</a>
-                 under the supervision of <a href="https://who.rocq.inria.fr/Laura.Grigori/">Laura Grigori</a>.
-
-                <!-- <br>
+                under the supervision of <a href="https://who.rocq.inria.fr/Laura.Grigori/">Laura Grigori</a>.
+								My Ph.D. has been funded through the H2020 project <a href="http://www.nlafet.eu/" style="color:inherit">NLAFET</a>.
+                <!--
+								<br>
                 Research description
                 <br>
                 -->
@@ -96,9 +86,89 @@
             <hr>
             <h3>CV</h3>
 
-            <a href="" >English version</a>.
+            <a href="">English version</a>.
 
+						<hr>
+						<h3>Software</h3>
+							<h4>
+								preAlps
+							</h4>
+							Developper of the parallel version(s) of the E(nlarged) C(onjugate) G(radient) method in C and MPI inside the preAlps library.
+							<br>
+							<h5>
+							Features
+							</h5>
+							<ul>
+								<li> Matrix and preconditioner free (Reverse Communication Interface).
+								<li> Very light: it only needs BLAS and LAPACK (Intel MKL).
+								<li> Scalability assesed up 16,384 cores on elasticity matrices.
+								<li> Documentation and examples.
+							</ul>
+							<h5>
+							<a role="button" data-toggle="collapse" data-target="#ecgexample">Basic example</a>
+							</h5>
+							<div class="collapse" id="ecgexample"><pre><code class="language-clike">// Allocate memory and initialize variables
+preAlps_ECGInitialize(&ecg,rhs,&rci_request);
+// Finish initialization:
+// 1) P <- A*R
+preAlps_BlockJacobiApply(ecg.R,ecg.P);
+// 2) AP <- A*P
+preAlps_BlockOperator(ecg.P,ecg.AP);
+// Main loop
+while (stop != 1) {
+  preAlps_ECGIterate(&ecg,&rci_request);
+  // AP <- A*P
+  if (rci_request == 0) preAlps_BlockOperator(ecg.P,ecg.AP);
+  else if (rci_request == 1) {
+    // Check convergence
+    preAlps_ECGStoppingCriterion(&ecg,&stop);
+    if (stop == 1) break;
+    // Z <- M^-1 * R
+    if (ecg.ortho_alg == ORTHOMIN) preAlps_BlockJacobiApply(ecg.R,ecg.Z);
+    // Z <- M^-1 * AP
+    else if (ecg.ortho_alg == ORTHODIR) preAlps_BlockJacobiApply(ecg.AP,ecg.Z);
+  }
+}
+// Retrieve solution and free memory
+preAlps_ECGFinalize(&ecg,sol);</pre></code></div>
+							<h5><a href="https://github.com/NLAFET/preAlps">Download</a></h5>
+<!-- I use and help developing a library created by Sebastien Cayrols and called **C Pa** (rallel) **L** (inear) **A** (lgebra) **Me** (mory) **M** (anagment). It only supported sparse matrices and I added few functions for manipulating tall and skinny dense matrices. -->
 
+							<h4>
+								<a role="button" data-toggle="collapse" data-target="#pastprojects">Old Projects</a>
+							</h4>
+							<div class="collapse" id="pastprojects">
+								<figure style="float:right;text-align:center;font-size:smaller;">
+								<img src="./img/movie_maze.gif" width="100%" style="max-width:300px" class="img" >
+								<figcaption>Bocop toy test: a mouse escapes a maze.</figcaption></figure>
+								<h5>
+									Bocop (2014 - 2015)
+								</h5>
+                Developper et maintainer of Bocop, a C++ optimal control toolbox.
+								<ul>
+									<li> Windows/Mac/Linux compatible.
+									<li> User friendly GUI (based on Qt).
+									<li> HJB approach that allows to solve stochastic problems.
+								</ul>
+								<h5>
+									Academic projects (2011 - 2014)
+								</h5>
+								<h6>
+									M.Sc.
+								</h6>
+								<ul>
+									<li> 2D Helmholtz and wave equations solver.
+									<li> 2D Navier-Stokes equations solver.
+									<li> Parallel low-rank decomposition.
+								</ul>
+								<a href="https://github.com/otissot/oliviertissot-projects">Source code and documentation</a> (in French) of those projects.
+								<h6>
+									B.Sc.
+								</h6>
+								<ul>
+									<li> Building and programing a ball collector robot.
+								</ul>
+						</div>
             <hr>
             <h3>Research</h3>
                 <h4>
@@ -129,7 +199,7 @@
 											<li>
 												Olivier Tissot,
 												<i> Iterative methods for solving linear systems on massively parallel architectures, </i>
-												<a href="doc/thesis.pdf">thesis</a>.
+												<a href="./doc/thesis.pdf">thesis</a>.
 												</li>
 									</ul>
 
@@ -241,16 +311,15 @@
 		</div>
 		<div class="col-sm-2" style="border-left:1px solid #eeeeee">
 			<div align="center">
-		  <img src="img/TISSOT_Olivier.jpg" width="100%" style = "max-width:200px" class="img-circle" ></div>
+		  <img src="./img/TISSOT_Olivier.JPG" width="100%" style = "max-width:200px" class="img-circle" ></div>
 		  <address>
 				<h5> Address </h5>
-				Office 05-325 <br>
 				Institut für Mathematik <br>
+				Office 05-325 <br>
 				Johannes Gutenberg Universität <br>
 				Staudingerweg 9 <br>
 				55099 Mainz, Germany
 		  </address>
-		  <!--<strong> Contact </strong> <br>-->
 		  <h5> Contact </h5>
 		  otissot (at) uni-mainz.de
 		</div>
@@ -263,5 +332,6 @@
 	<script src="https://code.jquery.com/jquery.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/bootstrap.min.js"></script>
-    </body>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
+  </body>
 </html>
